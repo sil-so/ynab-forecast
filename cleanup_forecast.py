@@ -116,14 +116,18 @@ def main():
                     continue
                 
                 # Only iterate on Weekly masters
-                if sched.frequency != 'weekly':
+                if sched.frequency == 'weekly':
+                    step = relativedelta(weeks=1)
+                elif sched.frequency == 'everyOtherWeek':
+                    step = relativedelta(weeks=2)
+                else:
                      # Verbose log for debug
-                     # print(f"   Skipping master {payee_name} ({sched.frequency}) - Not Weekly")
+                     # print(f"   Skipping master {payee_name} ({sched.frequency}) - Not Weekly/Bi-Weekly")
                      continue
 
                 print(f"   Found Master: {payee_name} ({sched.frequency})")
                 
-                step = relativedelta(weeks=1)
+
                 
                 # Start from Next Date + 1 step (User wants us to skip the one YNAB handles)
                 start_date = sched.date_next + step 
