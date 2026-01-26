@@ -71,7 +71,7 @@ def main():
                 payee_name = txn.payee_name or ""
                 if "TEMPFORCST" in payee_name.upper():
                     txn_date = txn.var_date
-                    if txn_date < today:
+                    if txn_date <= today:
                         if args.dry_run:
                             print(f"   [DRY-RUN] Would delete past txn: {txn_date} | {payee_name}")
                         else:
