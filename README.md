@@ -1,76 +1,71 @@
-# YNAB Forecast Automation 🔮
+# YNAB Forecast Automation
 
-A custom Python script that bridges the gap between your **Budget** and your **Running Balance** by automatically forecasting recurring variable expenses (like groceries or fuel).
+Automatically forecast recurring variable expenses in YNAB to get a realistic Running Balance.
 
-## The Problem
+> [!WARNING]
+> This project is provided **as-is** for personal use. Use at your own risk—always test with `--dry-run` first.
 
-YNAB is great at tracking fixed bills, but the "Running Balance" column often paints an overly optimistic picture because it ignores future variable spending.
+## Features
 
-## The Solution
+🔮 **Smart forecasting** — Projects variable expenses (groceries, fuel, etc.) into your Running Balance
 
-This script implements a **"Wipe & Rebuild"** strategy:
+🧹 **Wipe & Rebuild** — Cleans up old forecasts before generating fresh ones, no duplicates
 
-1.  **Clean:** It scans your register for previously auto-generated forecast transactions (identified by a specific Payee) and deletes them.
-2.  **Read:** It looks for your "Master" scheduled transactions (e.g., a weekly grocery trip).
-3.  **Forecast:** It generates new, one-time scheduled transactions for the next **4 weeks**.
+📅 **4-week projection** — Creates one-time scheduled transactions for the next 4 weeks
 
-This ensures your Running Balance always reflects the reality of your upcoming weeks, without clogging up your schedule with duplicate recurring events.
+⚡ **GitHub Actions ready** — Runs automatically on a daily schedule
 
----
+🧪 **Dry-run mode** — Preview changes without modifying your budget
 
-## Setup
+## Usage
 
-### 1. Prerequisites
+Mark any scheduled transaction for forecasting by including `TEMPFORCST` in the payee name:
 
-- A YNAB Account
-- A GitHub Account (to run via Actions) OR a local Python environment.
-- Your **YNAB Personal Access Token** & **Budget ID**.
+| Field     | Value                          |
+| --------- | ------------------------------ |
+| Payee     | `Groceries TEMPFORCST`         |
+| Frequency | `Weekly` or `Every Other Week` |
+| Amount    | Your average weekly spend      |
 
-### 2. YNAB Configuration
+The script scans for these "master" transactions and generates forecast entries for the next 4 weeks.
 
-Create a scheduled transaction in YNAB for the expense you want to forecast:
+### Running Locally
 
-- **Payee:** Must contain `TEMPFORCST` (e.g., `Groceries TEMPFORCST`).
-- **Frequency:** `Weekly` or `Every Other Week`.
-- **Amount:** Your average weekly spend.
+```bash
+# Preview changes (recommended first run)
+python cleanup_forecast.py --dry-run
 
-### 3. Environment Variables
+# Execute
+python cleanup_forecast.py
+```
 
-The script requires two environment variables to function. If running locally, you can use a `.env` file. If running on GitHub Actions, add these to your Repository Secrets.
+### Running via GitHub Actions
 
-| Variable     | Description                                                      |
-| :----------- | :--------------------------------------------------------------- |
-| `YNAB_TOKEN` | Your Personal Access Token from YNAB Developer Settings.         |
-| `BUDGET_ID`  | The ID of your budget (found in the URL when you open YNAB web). |
+The included workflow (`.github/workflows/cleanup.yml`) runs daily at **21:00 UTC**.
 
----
+1. Fork this repository
+2. Add secrets: **Settings → Secrets and variables → Actions**
+3. Enable the workflow in the **Actions** tab
 
-## How to Run
+## Installation
 
-### Option A: GitHub Actions (Recommended)
+### Environment Variables
 
-This repository includes a workflow `.github/workflows/cleanup.yml` that runs the script automatically every day at **21:00 UTC**.
+| Variable     | Description                                         |
+| ------------ | --------------------------------------------------- |
+| `YNAB_TOKEN` | Personal Access Token from YNAB Developer Settings  |
+| `BUDGET_ID`  | Budget ID (found in the URL when you open YNAB web) |
 
-1.  Fork this repository.
-2.  Go to **Settings** > **Secrets and variables** > **Actions**.
-3.  Add `YNAB_TOKEN` and `BUDGET_ID`.
-4.  Enable the workflow in the **Actions** tab.
+For local runs, create a `.env` file. For GitHub Actions, add these as Repository Secrets.
 
-### Option B: Local Execution
+### Local Setup
 
-1.  Clone the repo.
-2.  Install requirements:
-    ```bash
-    pip install -r requirements.txt
-    ```
-3.  Run the script:
-    ```bash
-    python cleanup_forecast.py
-    ```
-    _Use `--dry-run` to see what would happen without actually changing data._
+```bash
+git clone https://github.com/sil-so/ynab-tempforcst.git
+cd ynab-tempforcst
+pip install -r requirements.txt
+```
 
----
+## License
 
-## Disclaimer
-
-This is a personal project used to interact with the YNAB API. Use at your own risk. The script is designed to only delete transactions that match the specific `TEMPFORCST` criteria, but always back up your budget or test with a dry run first!
+[MIT](LICENSE)
