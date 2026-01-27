@@ -1,3 +1,4 @@
+# Automated YNAB forecast cleanup - runs daily at 21:00 UTC
 name: YNAB Forecast Cleanup
 
 on:
