@@ -19,11 +19,11 @@ Automatically forecast recurring variable expenses in YNAB to get a realistic Ru
 
 ## Usage
 
-Mark any scheduled transaction for forecasting by including `TEMPFORCST` in the payee name:
+Mark any scheduled transaction for forecasting by including `~ Forecast` in the payee name:
 
 | Field     | Value                          |
 | --------- | ------------------------------ |
-| Payee     | `Groceries TEMPFORCST`         |
+| Payee     | `Groceries ~ Forecast`         |
 | Frequency | `Weekly` or `Every Other Week` |
 | Amount    | Your average weekly spend      |
 

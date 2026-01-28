@@ -2,9 +2,9 @@
 """
 YNAB Forecast Manager
 
-1. Cleans up old 'TEMPFORCST' transactions (past dates).
+1. Cleans up old '~ Forecast' transactions (past dates).
 2. WIPE & REBUILD STRATEGY:
-   - Deletes ALL existing "Forecast" scheduled transactions (Frequency=Never, Payee=TEMPFORCST).
+   - Deletes ALL existing "Forecast" scheduled transactions (Frequency=Never, Payee=~ Forecast).
    - Regenerates them fresh from "Master" scheduled transactions (Frequency=Weekly).
    - Generates T+1 week, T+2 weeks context, skipping T+0 (which YNAB handles).
 """
@@ -69,7 +69,7 @@ def main():
             print("\n🧹 Analyzing Register (History) for cleanup...")
             for txn in all_transactions:
                 payee_name = txn.payee_name or ""
-                if "TEMPFORCST" in payee_name.upper():
+                if "~ FORECAST" in payee_name.upper():
                     txn_date = txn.var_date
                     if txn_date <= today:
                         if args.dry_run:
@@ -85,9 +85,9 @@ def main():
             print("\n🌬️  Wiping existing forecasts (Wipe & Rebuild)...")
             for sched in all_scheduled:
                 payee_name = sched.payee_name or ""
-                # We target scheduled transactions that are TEMPFORCST AND 'never' (one-time)
+                # We target scheduled transactions that are ~ Forecast AND 'never' (one-time)
                 # This ensures we don't delete the Master (Weekly/Monthly) ones.
-                if "TEMPFORCST" in payee_name.upper() and sched.frequency == 'never':
+                if "~ FORECAST" in payee_name.upper() and sched.frequency == 'never':
                     if args.dry_run:
                         print(f"   [DRY-RUN] Would wipe forecast: {sched.date_next} | {payee_name}")
                     else:
@@ -112,7 +112,7 @@ def main():
                 payee_name = sched.payee_name or ""
                 
                 # Filter for MASTERs
-                if sched.deleted or not payee_name or "TEMPFORCST" not in payee_name.upper():
+                if sched.deleted or not payee_name or "~ FORECAST" not in payee_name.upper():
                     continue
                 
                 # Only iterate on Weekly masters
