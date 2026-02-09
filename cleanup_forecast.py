@@ -11,8 +11,8 @@ scheduled transactions using a Delta Sync strategy:
 4. Only creates/deletes the difference (minimizes API calls)
 
 Forecast transactions are created as one-time scheduled transactions with:
-- Payee: "🔮 Forecast | [Original Memo]"
-- Memo: "Forecast (Auto-Gen) from [frequency]"
+- Payee: "🔮 Forecast [Original Memo]"
+- Memo: "🔮 Forecast [Original Memo] ([frequency])"
 - Frequency: "never" (one-time)
 
 Note: Recurring transactions without a memo are skipped.
@@ -31,7 +31,7 @@ from ynab.models.scheduled_transaction_frequency import ScheduledTransactionFreq
 
 # Configuration
 FORECAST_MONTHS = 2
-FORECAST_PREFIX = "🔮 Forecast |"
+FORECAST_PREFIX = "🔮 Forecast"
 # Proactive rate limiting: YNAB allows 200 requests/hour
 # Using 2 second delays between writes = max 30 writes/minute = 1800/hour (safe margin)
 API_DELAY_SECONDS = 2.0
@@ -208,7 +208,7 @@ def main() -> int:
                                 "amount": sched.amount,
                                 "account_id": sched.account_id,
                                 "category_id": sched.category_id,
-                                "memo": f"Forecast (Auto-Gen) from {sched.frequency}",
+                                "memo": f"{forecast_payee} ({sched.frequency})",
                                 "flag_color": sched.flag_color,
                             })
                     continue
@@ -229,7 +229,7 @@ def main() -> int:
                         "amount": sched.amount,
                         "account_id": sched.account_id,
                         "category_id": sched.category_id,
-                        "memo": f"Forecast (Auto-Gen) from {sched.frequency}",
+                        "memo": f"{forecast_payee} ({sched.frequency})",
                         "flag_color": sched.flag_color,
                     })
                     curr_date = curr_date + step
@@ -246,9 +246,8 @@ def main() -> int:
                     continue
                 payee_name = sched.payee_name or ""
                 memo = sched.memo or ""
-                # Match forecasts by prefix in payee OR by auto-gen memo
-                is_forecast = (FORECAST_PREFIX in payee_name or 
-                               memo.startswith("Forecast (Auto-Gen)"))
+                # Match forecasts by prefix in payee
+                is_forecast = FORECAST_PREFIX in payee_name
                 
                 if is_forecast and sched.frequency == 'never':
                     existing_forecasts.append(sched)

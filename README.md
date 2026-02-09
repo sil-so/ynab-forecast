@@ -28,17 +28,17 @@ The script:
 1. Fetches all scheduled transactions from your YNAB budget
 2. Identifies recurring transactions (weekly, monthly, etc.)
 3. Calculates future occurrences for the next 2 months
-4. Creates one-time scheduled transactions with payee `🔮 Forecast | [Memo]`
+4. Creates one-time scheduled transactions with payee `🔮 Forecast [Memo]`
 5. Uses delta sync to only create/delete what's changed since last run
 
 ### Naming Convention
 
 Generated forecasts use the **memo** from the master recurring transaction:
 
-| Master Transaction      | Master Memo  | Generated Forecast Payee    |
-| ----------------------- | ------------ | --------------------------- |
-| `ING Bank` (monthly)    | `Bankkosten` | `🔮 Forecast \| Bankkosten` |
-| `Albert Heijn` (weekly) | `Groceries`  | `🔮 Forecast \| Groceries`  |
+| Master Transaction      | Master Memo  | Generated Forecast Payee |
+| ----------------------- | ------------ | ------------------------ |
+| `ING Bank` (monthly)    | `Bankkosten` | `🔮 Forecast Bankkosten` |
+| `Albert Heijn` (weekly) | `Groceries`  | `🔮 Forecast Groceries`  |
 
 > [!NOTE]
 > Recurring transactions **without a memo** are skipped. Set a memo on your master transactions to include them in forecasting.
