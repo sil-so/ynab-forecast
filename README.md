@@ -67,6 +67,9 @@ Generated forecasts use the **memo** from the master recurring transaction:
 ### Running Locally
 
 ```bash
+# Activate virtual environment
+source venv/bin/activate
+
 # Preview changes (recommended first run)
 python cleanup_forecast.py --dry-run
 
