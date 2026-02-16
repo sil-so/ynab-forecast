@@ -42,6 +42,8 @@ Generated forecasts use the **memo** from the master recurring transaction:
 
 > [!NOTE]
 > Recurring transactions **without a memo** are skipped. Set a memo on your master transactions to include them in forecasting.
+>
+> If your source memo already starts with `🔮` (e.g. from a previous forecast), it will be automatically stripped before adding the new prefix to avoid duplication.
 
 ### Supported Frequencies
 

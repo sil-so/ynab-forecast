@@ -192,7 +192,15 @@ def main() -> int:
                     continue
                 
                 # Build forecast payee name using the memo
-                forecast_payee = f"{FORECAST_PREFIX} {original_memo}"
+                clean_memo = original_memo
+                if clean_memo.startswith("🔮 "):
+                    clean_memo = clean_memo[len("🔮 "):]
+                elif clean_memo.startswith("🔮"): # Handle case without space
+                    clean_memo = clean_memo[len("🔮"):]
+                
+                clean_memo = clean_memo.strip()
+
+                forecast_payee = f"{FORECAST_PREFIX} {clean_memo}"
                 
                 # Handle special frequency: twiceAMonth
                 if sched.frequency == 'twiceAMonth':
